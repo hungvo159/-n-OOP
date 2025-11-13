@@ -372,8 +372,15 @@ class QuanLyNhanVien {
                     if (ok) luuFile(FILE_NAME);
                 }
                 case 4 -> {
-                    String ma = QuanLyKho.readString("Nhập mã nhân viên cần tìm: "); 
-                    dsNhanVien.stream().filter(n -> n.getMaNV().equalsIgnoreCase(ma)).forEach(NhanVienKho::xuat);
+                    boolean timThay = false;
+                    String ma = QuanLyKho.readString("Nhập mã nhân viên cần tìm: ");
+                    for (NhanVienKho nv : dsNhanVien) {
+                        if (nv.getMaNV().equalsIgnoreCase(ma)) {
+                            nv.xuat(); //
+                            timThay = true;
+                        }
+                    }
+                    if (!timThay) System.out.println("Không tìm thấy nhân viên có mã: " + ma);
                 }
                 case 5 -> {}
             }
@@ -572,4 +579,5 @@ class QuanLyKhachHang {
             System.out.println("Đã đọc file " + tenFile + " thành công!");
         } catch (IOException e) { System.out.println("Lỗi đọc file " + tenFile); }
     }
+
 }
