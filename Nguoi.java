@@ -6,7 +6,6 @@ abstract class Nguoi implements IFile {
     protected String gioiTinh;
 
     public Nguoi() { this.hoTen = ""; this.ngaySinh = ""; this.gioiTinh = ""; }
-
     public Nguoi(String hoTen, String ngaySinh, String gioiTinh) {
         this.hoTen = hoTen; this.ngaySinh = ngaySinh; this.gioiTinh = gioiTinh;
     }
@@ -40,7 +39,7 @@ class KhachHang extends Nguoi {
 
     @Override
     public void nhap() {
-        maKhachHang = QuanLyKho.readString("Nhập mã KH: ");
+        maKhachHang = QuanLyKho.readMa("Nhập mã KH (KHXXX): ", "KH");
         hoTen = QuanLyKho.readString("Nhập họ tên: ");
         
         java.util.Date nsDate = QuanLyKho.readDate_YYYYMMDD("Nhập ngày sinh (yyyy-mm-dd): ");
@@ -64,40 +63,34 @@ class KhachHang extends Nguoi {
 class NhanVienKho extends Nguoi {
     private String maNV;
     private String chucVu;
-    private String caTruc;
 
-    public NhanVienKho() { super(); this.maNV = ""; this.chucVu = ""; this.caTruc = ""; }
+    public NhanVienKho() { super(); this.maNV = ""; this.chucVu = "";  }
 
-    public NhanVienKho(String ma, String ten, String ns, String cv, String ca) {
+    public NhanVienKho(String ma, String ten, String ns, String cv) {
         super(ten, ns, ""); // Giới tính không được nhập ở hàm nhap(), để trống
         this.maNV = ma;
         this.chucVu = cv;
-        this.caTruc = ca;
     }
 
     public String toFileString() {
-        return maNV + "|" + hoTen + "|" + ngaySinh + "|" + chucVu + "|" + caTruc;
+        return maNV + "|" + hoTen + "|" + ngaySinh + "|" + chucVu ;
     }
 
     @Override
     public void nhap() {
-        maNV = QuanLyKho.readString("Nhập mã NV: ");
+        maNV = QuanLyKho.readMa("Nhập mã NV (NVXXX): ", "NV");
         hoTen = QuanLyKho.readString("Nhập họ tên: ");
 
         java.util.Date nsDate = QuanLyKho.readDate_YYYYMMDD("Nhập ngày sinh (yyyy-mm-dd): ");
         ngaySinh = new java.sql.Date(nsDate.getTime()).toString();
-        
         chucVu = QuanLyKho.readString("Nhập chức vụ: ");
-        caTruc = QuanLyKho.readString("Nhập ca trực: ");
     }
 
     @Override
     public void xuat() {
-        System.out.println("MaNV: " + maNV + " | Họ tên: " + hoTen + " | NS: " + ngaySinh + " | CV: " + chucVu + " | Ca: " + caTruc);
+        System.out.println("MaNV: " + maNV + " | Họ tên: " + hoTen + " | NS: " + ngaySinh + " | CV: " + chucVu);
     }
-
     public String getMaNV() { return maNV; }
     public String getHoTen() { return hoTen; }
     public String getChucVu() { return chucVu; }
-    public String getCaTruc() { return caTruc; }
 }
