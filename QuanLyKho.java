@@ -808,8 +808,42 @@ class QuanLySanPham {
         }
         if (!found) System.out.println("Không tìm thấy sản phẩm!");
     }
-
+    private static final Map<String, Integer> PREFIX_ORDER = new HashMap<>();
+    static {
+        PREFIX_ORDER.put("TA", 1); // Thức Ăn
+        PREFIX_ORDER.put("NU", 2); // Nước Uống
+        PREFIX_ORDER.put("NF", 3); // Non-Food
+        // Thêm các loại khác nếu cần
+    }
     public void luuFile() {
+        Collections.sort(dsSanPham, (sp1, sp2) -> {
+            String ma1 = sp1.getMa();
+            String ma2 = sp2.getMa();
+            
+            String prefix1 = ma1.substring(0, 2);
+            String prefix2 = ma2.substring(0, 2);
+            
+            // Lấy thứ tự từ Map. Nếu không tìm thấy, gán thứ tự lớn (99) để đẩy xuống cuối
+            int order1 = PREFIX_ORDER.getOrDefault(prefix1, 99);
+            int order2 = PREFIX_ORDER.getOrDefault(prefix2, 99);
+
+            // 1. So sánh theo tiền tố (dựa vào thứ tự trong Map)
+            int prefixComparison = Integer.compare(order1, order2);
+            if (prefixComparison != 0) {
+                return prefixComparison;
+            }
+
+            // 2. Nếu tiền tố giống nhau, so sánh phần số
+            try {
+                int number1 = Integer.parseInt(ma1.substring(2));
+                int number2 = Integer.parseInt(ma2.substring(2));
+                return Integer.compare(number1, number2);
+            } catch (NumberFormatException e) {
+                // Nếu mã không phải số, so sánh chuỗi toàn bộ (fallback)
+                return ma1.compareTo(ma2);
+            }
+        });
+        
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.FILE_NAME))) {
             for (SanPham sp : dsSanPham)
                 bw.write(sp.toFileString() + "\n");
